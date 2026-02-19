@@ -1,5 +1,6 @@
 #include <filesystem>
 #include <iostream>
+#include <vector>
 
 void remover_pasta_repetida(const std::string &pasta_raiz, const std::string &pasta_remover);
 
@@ -21,15 +22,21 @@ int main() {
 }
 
 void remover_pasta_repetida(const std::string &pasta_raiz, const std::string &pasta_remover) {
-    for (const auto &entrada: std::filesystem::recursive_directory_iterator(pasta_raiz)) {
+    std::vector<std::filesystem::path> pastas_para_remover;
+    for (const auto &entrada: std::filesystem::recursive_directory_iterator(
+             pasta_raiz, std::filesystem::directory_options::skip_permission_denied)) {
         if (entrada.is_directory() && entrada.path().filename() == pasta_remover) {
-            std::error_code ec;
-            std::filesystem::remove_all(entrada.path(), ec);
-            if (ec) {
-                std::cerr << "Erro ao remover pasta " << entrada.path().string() << ": " << ec.message() << std::endl;
-            } else {
-                std::cout << "Removida pasta: " << entrada.path().string() << std::endl;
-            }
+            pastas_para_remover.push_back(entrada.path());
+        }
+    }
+
+    for (const auto &pasta: pastas_para_remover) {
+        std::error_code ec;
+        std::filesystem::remove_all(pasta, ec);
+        if (ec) {
+            std::cerr << "Erro ao remover pasta " << pasta.string() << ": " << ec.message() << std::endl;
+        } else {
+            std::cout << "Removida pasta: " << pasta.string() << std::endl;
         }
     }
 }
