@@ -1,3 +1,13 @@
+/**
+ * @file main.cpp
+ * @brief Remove pastas repetidas em um diretório raiz.
+ *
+ * Este programa percorre recursivamente um diretório raiz e remove todas as pastas que possuem o mesmo nome especificado pelo usuário.
+ *
+ * @author Carlos Leonardo Goes Farias
+ * @date 20/02/2026
+ */
+
 #include <filesystem>
 #include <iostream>
 #include <vector>
